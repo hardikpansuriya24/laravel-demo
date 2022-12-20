@@ -24,4 +24,11 @@ Route::post('/login', [UserController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/login', [UserController::class, 'userDetail']);
+
+    Route::prefix('task')->group(function () {
+        Route::post(
+            '/create',
+            [TaskController::class, 'create']
+        );
+    });
 });

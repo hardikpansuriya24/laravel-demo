@@ -7,15 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use App\Models\User;
+use App\Models\Task;
 use Validator;
 
-class UserController extends Controller
+class TaskController extends Controller
 {
     //Eroor code list
     //https://gist.github.com/jeffochoa/a162fc4381d69a2d862dafa61cda0798
 
-    public function registration(Request $request): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             "name" => "required",
@@ -47,27 +47,5 @@ class UserController extends Controller
             DB::rollBack();
             throw $e;
         }
-    }
-
-    public function login(Request $request): JsonResponse
-    {
-
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-
-            $user = Auth::user();
-
-            $resArr = [];
-            $resArr['token'] = $user->createToken('api:application')->accessToken;
-            $resArr['name'] = $user->name;
-
-            return response()->json($resArr, Response::HTTP_OK);
-        }else{
-            return response()->json(["errors" => "Unauthorized Access"], Response::HTTP_BAD_REQUEST);
-        }
-    }
-
-    public function userDetail(Request $request){
-
-        return response()->json(Auth::user(), Response::HTTP_OK);
     }
 }
